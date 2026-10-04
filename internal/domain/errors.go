@@ -6,6 +6,9 @@ var (
 	// ErrAccountNotFound is returned when an account cannot be found.
 	ErrAccountNotFound = errors.New("account not found")
 
+	// ErrTransferNotFound is returned when a transfer cannot be found.
+	ErrTransferNotFound = errors.New("transfer not found")
+
 	// ErrInsufficientFunds is returned when an account does not have enough balance for a debit/transfer.
 	ErrInsufficientFunds = errors.New("insufficient funds")
 
@@ -20,4 +23,7 @@ var (
 
 	// ErrInvalidCurrency is returned when a currency code is not supported.
 	ErrInvalidCurrency = errors.New("invalid or unsupported currency")
+
+	// ErrInvalidOwner is returned when the account owner is missing or empty.
+	ErrInvalidOwner = errors.New("owner name cannot be empty")
 )

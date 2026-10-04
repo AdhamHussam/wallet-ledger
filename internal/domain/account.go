@@ -21,8 +21,9 @@ type Entry struct {
 
 // CreateAccountRequest contains data required to create a new account.
 type CreateAccountRequest struct {
-	Owner    string `json:"owner"`
-	Currency string `json:"currency"`
+	Owner          string `json:"owner"`
+	Currency       string `json:"currency"`
+	InitialBalance int64  `json:"initial_balance,omitempty"`
 }
 
 // ListAccountsRequest contains pagination parameters for listing accounts.
