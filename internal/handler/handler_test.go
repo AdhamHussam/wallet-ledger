@@ -34,6 +34,7 @@ func (m *mockAccountService) ListAccounts(ctx context.Context, req domain.ListAc
 type mockTransferService struct {
 	createFn func(ctx context.Context, req domain.TransferRequest) (domain.TransferResponse, error)
 	getFn    func(ctx context.Context, id int64) (domain.Transfer, error)
+	listFn   func(ctx context.Context, req domain.ListTransfersRequest) ([]domain.Transfer, error)
 }
 
 func (m *mockTransferService) CreateTransfer(ctx context.Context, req domain.TransferRequest) (domain.TransferResponse, error) {
@@ -41,6 +42,9 @@ func (m *mockTransferService) CreateTransfer(ctx context.Context, req domain.Tra
 }
 func (m *mockTransferService) GetTransfer(ctx context.Context, id int64) (domain.Transfer, error) {
 	return m.getFn(ctx, id)
+}
+func (m *mockTransferService) ListTransfers(ctx context.Context, req domain.ListTransfersRequest) ([]domain.Transfer, error) {
+	return m.listFn(ctx, req)
 }
 
 // ---- helpers ----
@@ -269,6 +273,36 @@ func TestGetTransferHandler(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestListTransfersHandler(t *testing.T) {
+	t.Run("success", func(t *testing.T) {
+		svc := &mockTransferService{
+			listFn: func(_ context.Context, req domain.ListTransfersRequest) ([]domain.Transfer, error) {
+				return []domain.Transfer{
+					{ID: 1, FromAccountID: 1, ToAccountID: 2, Amount: 100},
+				}, nil
+			},
+		}
+		router := NewRouter(&mockAccountService{}, svc)
+		rec := doRequest(t, router, http.MethodGet, "/transfers?page_id=1&page_size=10", "")
+		if rec.Code != http.StatusOK {
+			t.Fatalf("expected 200, got %d", rec.Code)
+		}
+	})
+
+	t.Run("empty returns array", func(t *testing.T) {
+		svc := &mockTransferService{
+			listFn: func(_ context.Context, _ domain.ListTransfersRequest) ([]domain.Transfer, error) {
+				return nil, nil
+			},
+		}
+		router := NewRouter(&mockAccountService{}, svc)
+		rec := doRequest(t, router, http.MethodGet, "/transfers", "")
+		if body := bytes.TrimSpace(rec.Body.Bytes()); string(body) != "[]" {
+			t.Errorf("expected [], got %s", body)
+		}
+	})
 }
 
 func TestMethodNotAllowed(t *testing.T) {

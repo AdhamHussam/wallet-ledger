@@ -25,6 +25,7 @@ func NewRouter(accounts service.AccountService, transfers service.TransferServic
 	mux.HandleFunc("GET /accounts/{id}", ah.Get)
 
 	mux.HandleFunc("POST /transfers", th.Create)
+	mux.HandleFunc("GET /transfers", th.List)
 	mux.HandleFunc("GET /transfers/{id}", th.Get)
 
 	// Middleware order: CORS -> Logging -> Recoverer -> Handlers

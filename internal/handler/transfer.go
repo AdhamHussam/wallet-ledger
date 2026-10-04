@@ -49,3 +49,35 @@ func (h *TransferHandler) Get(w http.ResponseWriter, r *http.Request) {
 
 	writeJSON(w, http.StatusOK, transfer)
 }
+
+// List handles GET /transfers?page_id=1&page_size=20.
+func (h *TransferHandler) List(w http.ResponseWriter, r *http.Request) {
+	q := r.URL.Query()
+
+	pageID, err := parseOptionalInt32(q.Get("page_id"))
+	if err != nil {
+		writeError(w, http.StatusBadRequest, "page_id must be a positive integer")
+		return
+	}
+
+	pageSize, err := parseOptionalInt32(q.Get("page_size"))
+	if err != nil {
+		writeError(w, http.StatusBadRequest, "page_size must be a positive integer")
+		return
+	}
+
+	transfers, err := h.svc.ListTransfers(r.Context(), domain.ListTransfersRequest{
+		PageID:   pageID,
+		PageSize: pageSize,
+	})
+	if err != nil {
+		writeDomainError(w, r, err)
+		return
+	}
+
+	if transfers == nil {
+		transfers = []domain.Transfer{}
+	}
+
+	writeJSON(w, http.StatusOK, transfers)
+}

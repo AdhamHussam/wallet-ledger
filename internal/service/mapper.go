@@ -33,6 +33,14 @@ func toDomainTransfer(t db.Transfer) domain.Transfer {
 	}
 }
 
+func toDomainTransfers(transfers []db.Transfer) []domain.Transfer {
+	result := make([]domain.Transfer, len(transfers))
+	for i, t := range transfers {
+		result[i] = toDomainTransfer(t)
+	}
+	return result
+}
+
 func toDomainEntry(e db.Entry) domain.Entry {
 	return domain.Entry{
 		ID:        e.ID,

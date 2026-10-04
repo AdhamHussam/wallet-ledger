@@ -14,6 +14,7 @@ import (
 type TransferService interface {
 	CreateTransfer(ctx context.Context, req domain.TransferRequest) (domain.TransferResponse, error)
 	GetTransfer(ctx context.Context, id int64) (domain.Transfer, error)
+	ListTransfers(ctx context.Context, req domain.ListTransfersRequest) ([]domain.Transfer, error)
 }
 
 type transferService struct {
@@ -106,4 +107,31 @@ func (s *transferService) GetTransfer(ctx context.Context, id int64) (domain.Tra
 	}
 
 	return toDomainTransfer(transfer), nil
+}
+
+func (s *transferService) ListTransfers(ctx context.Context, req domain.ListTransfersRequest) ([]domain.Transfer, error) {
+	pageID := req.PageID
+	if pageID <= 0 {
+		pageID = 1
+	}
+
+	pageSize := req.PageSize
+	if pageSize <= 0 {
+		pageSize = 20
+	} else if pageSize > 1000 {
+		pageSize = 1000
+	}
+
+	limit := pageSize
+	offset := (pageID - 1) * pageSize
+
+	transfers, err := s.store.ListTransfers(ctx, db.ListTransfersParams{
+		Limit:  limit,
+		Offset: offset,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return toDomainTransfers(transfers), nil
 }

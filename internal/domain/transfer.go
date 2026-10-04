@@ -27,3 +27,9 @@ type TransferResponse struct {
 	FromEntry   Entry    `json:"from_entry"`
 	ToEntry     Entry    `json:"to_entry"`
 }
+
+// ListTransfersRequest contains pagination parameters for listing transfers.
+type ListTransfersRequest struct {
+	PageID   int32 `json:"page_id"`
+	PageSize int32 `json:"page_size"`
+}

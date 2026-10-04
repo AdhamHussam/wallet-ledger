@@ -41,13 +41,17 @@ export function App() {
     }
   }, [])
 
-  const loadAccounts = useCallback(async (isManual = false) => {
+  const loadData = useCallback(async (isManual = false) => {
     if (isManual) setIsRefreshing(true)
     try {
-      const data = await api.listAccounts(1, 100)
-      setAccounts(data)
+      const [accs, txs] = await Promise.all([
+        api.listAccounts(1, 100),
+        api.listTransfers(1, 50),
+      ])
+      setAccounts(accs)
+      setTransfers(txs)
     } catch (err: any) {
-      showToast('error', `Failed to load accounts: ${err.message}`)
+      showToast('error', `Failed to load ledger data: ${err.message}`)
     } finally {
       setLoading(false)
       setIsRefreshing(false)
@@ -56,31 +60,22 @@ export function App() {
 
   useEffect(() => {
     checkHealth()
-    loadAccounts()
+    loadData()
 
     // Poll health every 30 seconds
     const interval = setInterval(checkHealth, 30000)
     return () => clearInterval(interval)
-  }, [checkHealth, loadAccounts])
+  }, [checkHealth, loadData])
 
   const handleCreateAccount = async (req: CreateAccountRequest) => {
     const newAccount = await api.createAccount(req)
-    setAccounts((prev) => [newAccount, ...prev])
+    await loadData()
     showToast('success', `Account #${newAccount.id} created for ${newAccount.owner}`)
   }
 
   const handleTransfer = async (req: TransferRequest) => {
     const res = await api.createTransfer(req)
-    // Update local accounts state with returned updated balances
-    setAccounts((prev) =>
-      prev.map((acc) => {
-        if (acc.id === res.from_account.id) return res.from_account
-        if (acc.id === res.to_account.id) return res.to_account
-        return acc
-      })
-    )
-    // Prepend to transfers audit log
-    setTransfers((prev) => [res.transfer, ...prev])
+    await loadData()
     showToast(
       'success',
       `Transferred ${res.transfer.amount} ${res.from_account.currency} from #${req.from_account_id} to #${req.to_account_id}`
@@ -134,7 +129,7 @@ export function App() {
       {/* Navbar */}
       <Navbar
         isHealthy={isHealthy}
-        onRefresh={() => loadAccounts(true)}
+        onRefresh={() => loadData(true)}
         onOpenCreateAccount={() => setIsCreateOpen(true)}
         onOpenTransfer={() => {
           setTransferFromAccount(null)

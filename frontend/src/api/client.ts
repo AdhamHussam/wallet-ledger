@@ -24,7 +24,7 @@ export const api = {
     return handleResponse(res)
   },
 
-  async listAccounts(pageId = 1, pageSize = 50): Promise<Account[]> {
+  async listAccounts(pageId = 1, pageSize = 100): Promise<Account[]> {
     const res = await fetch(`${API_BASE}/accounts?page_id=${pageId}&page_size=${pageSize}`)
     return handleResponse(res)
   },
@@ -40,6 +40,11 @@ export const api = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(req),
     })
+    return handleResponse(res)
+  },
+
+  async listTransfers(pageId = 1, pageSize = 50): Promise<Transfer[]> {
+    const res = await fetch(`${API_BASE}/transfers?page_id=${pageId}&page_size=${pageSize}`)
     return handleResponse(res)
   },
 

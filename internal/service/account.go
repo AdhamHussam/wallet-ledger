@@ -78,8 +78,8 @@ func (s *accountService) ListAccounts(ctx context.Context, req domain.ListAccoun
 	pageSize := req.PageSize
 	if pageSize <= 0 {
 		pageSize = 10
-	} else if pageSize > 100 {
-		pageSize = 100
+	} else if pageSize > 1000 {
+		pageSize = 1000
 	}
 
 	limit := pageSize
