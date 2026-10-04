@@ -1,6 +1,6 @@
 # Wallet Ledger Service
 
-A high-performance, ACID-compliant financial ledger and wallet service written in Go and backed by PostgreSQL. Designed for high-concurrency environments with strict money conservation guarantees and deadlock-free transactions.
+A high-performance, ACID-compliant financial ledger and wallet service written in Go and backed by PostgreSQL, paired with a modern React + TypeScript dashboard. Designed for high-concurrency environments with strict money conservation guarantees and deadlock-free transactions.
 
 ---
 
@@ -8,8 +8,15 @@ A high-performance, ACID-compliant financial ledger and wallet service written i
 
 ```
                       +----------------------------------+
+                      |         Web Dashboard            |
+                      |    (React 19 + TypeScript +      |
+                      |   Tailwind CSS + Lucide Icons)   |
+                      +-----------------+----------------+
+                                        |
+                      +-----------------v----------------+
                       |         HTTP REST API            |
-                      |   (Go standard net/http router)  |
+                      |   (Go standard net/http router   |
+                      |    + CORS + Recovery Middleware) |
                       +-----------------+----------------+
                                         |
                       +-----------------v----------------+
@@ -37,7 +44,7 @@ A high-performance, ACID-compliant financial ledger and wallet service written i
 2. **Conservation of Money**: Under any number of concurrent transactions across multiple accounts, $\sum \text{Balance}_{\text{final}} = \sum \text{Balance}_{\text{initial}}$.
 3. **Deadlock Prevention**: In concurrent bidirectional transfers between accounts ($A \rightarrow B$ and $B \rightarrow A$), deadlocks are mathematically eliminated by enforcing consistent global acquisition order (always locking and updating the lower account ID first).
 4. **Database Check Constraints**: Enforces `balance >= 0` at the database level (`balance_non_negative`), protecting against any overdraft race condition.
-5. **Zero External Router Dependencies**: Handlers and routing leverage Go's built-in `net/http` router with middleware for structured logging (`log/slog`) and panic recovery.
+5. **Zero External Router Dependencies**: Handlers and routing leverage Go's built-in `net/http` router with middleware for structured logging (`log/slog`), CORS support, and panic recovery.
 6. **Embedded Database Migrations**: Uses `//go:embed` with `golang-migrate` to automatically apply migrations on service startup.
 
 ---
@@ -215,6 +222,7 @@ Settings are loaded from environment variables (see [`.env.example`](.env.exampl
 
 ### Prerequisites
 - Go 1.22+
+- Node.js 18+ & npm
 - Docker & Docker Compose
 
 ### 1. Start PostgreSQL
@@ -222,27 +230,37 @@ Settings are loaded from environment variables (see [`.env.example`](.env.exampl
 docker compose up -d
 ```
 
-### 2. Run the Service
+### 2. Run the Backend API Service
 ```bash
 go run ./cmd/api
 ```
 The service will automatically connect to PostgreSQL, apply all embedded database migrations, and start listening on `:8080`.
 
+### 3. Run the Frontend Dashboard
+```bash
+cd frontend
+npm install
+npm run dev
+```
+Open **[http://localhost:3000](http://localhost:3000)** in your browser. The Vite development server automatically proxies API requests to the Go backend at `:8080`.
+
 ---
 
 ## Testing & Verification
 
-### Run All Unit & Integration Tests with Race Detection
+### Run Backend Unit & Integration Tests with Race Detection
 ```bash
 go test -v -race ./...
 ```
 
-### Run Benchmarks
+### Run Backend Benchmarks
 ```bash
 go test -bench=. -benchmem -run=^$ ./internal/repository/db
 ```
 
-**Benchmark Results:**
-- `GetAccount`: **~69 µs/op** (~14,500 operations/sec)
-- `CreateAccount`: **~1.15 ms/op** (~865 operations/sec)
-- `TransferTx`: **~1.72 ms/op** (~580 atomic multi-record transactions/sec)
+### Build Frontend for Production
+```bash
+cd frontend
+npm run build
+```
+Outputs static assets into `frontend/dist/`.

@@ -27,6 +27,6 @@ func NewRouter(accounts service.AccountService, transfers service.TransferServic
 	mux.HandleFunc("POST /transfers", th.Create)
 	mux.HandleFunc("GET /transfers/{id}", th.Get)
 
-	// Middleware order: Recoverer is outermost-but-one so panics are logged with status 500.
-	return Logging(Recoverer(mux))
+	// Middleware order: CORS -> Logging -> Recoverer -> Handlers
+	return CORS(Logging(Recoverer(mux)))
 }

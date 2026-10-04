@@ -28,3 +28,8 @@ go.work
 .env
 .env.*
 !.env.example
+
+# Frontend Node & Build artifacts
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
