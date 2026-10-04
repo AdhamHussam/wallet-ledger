@@ -2,7 +2,6 @@ package domain
 
 import "strings"
 
-// Supported currency constants
 const (
 	USD = "USD"
 	EUR = "EUR"
@@ -23,7 +22,6 @@ var supportedCurrencies = map[string]struct{}{
 	CHF: {},
 }
 
-// IsSupportedCurrency returns true if the uppercase currency string is supported.
 func IsSupportedCurrency(currency string) bool {
 	_, ok := supportedCurrencies[strings.ToUpper(strings.TrimSpace(currency))]
 	return ok
