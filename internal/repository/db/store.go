@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/AdhamHussam/wallet-ledge/internal/domain"
+	"github.com/AdhamHussam/wallet-ledger/internal/domain"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgxpool"

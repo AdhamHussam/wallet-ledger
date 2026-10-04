@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/AdhamHussam/wallet-ledge/internal/domain"
+	"github.com/AdhamHussam/wallet-ledger/internal/domain"
 )
 
 func randomAccountRequest(balance int64, currency string) domain.CreateAccountRequest {

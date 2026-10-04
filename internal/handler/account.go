@@ -4,8 +4,8 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/AdhamHussam/wallet-ledge/internal/domain"
-	"github.com/AdhamHussam/wallet-ledge/internal/service"
+	"github.com/AdhamHussam/wallet-ledger/internal/domain"
+	"github.com/AdhamHussam/wallet-ledger/internal/service"
 )
 
 // AccountHandler exposes account operations over HTTP.

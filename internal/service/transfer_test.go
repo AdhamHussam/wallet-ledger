@@ -5,7 +5,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/AdhamHussam/wallet-ledge/internal/domain"
+	"github.com/AdhamHussam/wallet-ledger/internal/domain"
 )
 
 func TestCreateTransfer(t *testing.T) {

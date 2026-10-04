@@ -1,8 +1,8 @@
 package service
 
 import (
-	"github.com/AdhamHussam/wallet-ledge/internal/domain"
-	"github.com/AdhamHussam/wallet-ledge/internal/repository/db"
+	"github.com/AdhamHussam/wallet-ledger/internal/domain"
+	"github.com/AdhamHussam/wallet-ledger/internal/repository/db"
 )
 
 func toDomainAccount(a db.Account) domain.Account {

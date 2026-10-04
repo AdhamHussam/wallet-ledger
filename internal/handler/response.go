@@ -9,7 +9,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/AdhamHussam/wallet-ledge/internal/domain"
+	"github.com/AdhamHussam/wallet-ledger/internal/domain"
 )
 
 // maxBodyBytes caps request body size to protect the server from oversized payloads.

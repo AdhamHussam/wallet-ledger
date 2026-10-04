@@ -3,7 +3,7 @@ package handler
 import (
 	"net/http"
 
-	"github.com/AdhamHussam/wallet-ledge/internal/service"
+	"github.com/AdhamHussam/wallet-ledger/internal/service"
 )
 
 // NewRouter wires all HTTP routes and middleware.

@@ -3,8 +3,8 @@ package handler
 import (
 	"net/http"
 
-	"github.com/AdhamHussam/wallet-ledge/internal/domain"
-	"github.com/AdhamHussam/wallet-ledge/internal/service"
+	"github.com/AdhamHussam/wallet-ledger/internal/domain"
+	"github.com/AdhamHussam/wallet-ledger/internal/service"
 )
 
 // TransferHandler exposes transfer operations over HTTP.

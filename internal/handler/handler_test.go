@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/AdhamHussam/wallet-ledge/internal/domain"
+	"github.com/AdhamHussam/wallet-ledger/internal/domain"
 )
 
 // ---- mocks ----

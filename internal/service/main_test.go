@@ -6,7 +6,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/AdhamHussam/wallet-ledge/internal/repository/db"
+	"github.com/AdhamHussam/wallet-ledger/internal/repository/db"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
